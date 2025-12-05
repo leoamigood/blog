@@ -17,25 +17,35 @@ RSpec.configure do |config|
   # By default, the operations defined in spec files are added to the first
   # document below. You can override this behavior by adding a openapi_spec tag to the
   # the root example_group in your specs, e.g. describe '...', openapi_spec: 'v2/swagger.json'
-  config.openapi_specs = {
-    'v1/swagger.yaml' => {
-      openapi: '3.0.1',
-      info: {
-        title: 'API V1',
-        version: 'v1'
-      },
-      paths: {},
-      servers: [
-        {
-          url: 'https://{defaultHost}',
-          variables: {
-            defaultHost: {
-              default: 'www.example.com'
-            }
+  base_config = {
+    openapi: '3.0.1',
+    consumes:   [ 'application/vnd.api+json' ],
+    produces:   [ 'application/vnd.api+json' ],
+    paths: {},
+    servers: [
+      {
+        url: 'http://localhost:3000',
+        variables: {
+          defaultHost: {
+            default: 'localhost:3000'
           }
         }
-      ]
-    }
+      }
+    ]
+  }
+
+  config.openapi_specs = {
+    'v1/swagger.yaml' => base_config.deep_merge(
+      {
+        info:       {
+          title:   'API V1',
+          version: 'v1'
+        },
+        components: {
+          schemas: RswagHelper.parse_components([ 'spec/support/schemas/api/v1/components' ])
+        }
+      }
+    )
   }
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.
@@ -43,4 +53,6 @@ RSpec.configure do |config|
   # the key, this may want to be changed to avoid putting yaml in json files.
   # Defaults to json. Accepts ':json' and ':yaml'.
   config.openapi_format = :yaml
+  config.openapi_no_additional_properties = true
+  config.openapi_all_properties_required = true
 end

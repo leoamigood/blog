@@ -1,10 +1,22 @@
 ---
 openapi: 3.0.1
-info:
-  title: API V1
-  version: v1
+consumes:
+- application/vnd.api+json
+produces:
+- application/vnd.api+json
 paths:
-  "/posts.json":
+  "/api/v1/posts":
+    get:
+      summary: List posts
+      tags:
+      - Posts
+      responses:
+        '200':
+          description: successful
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/Requests_Posts_Index"
     post:
       summary: Creates a post
       tags:
@@ -12,27 +24,50 @@ paths:
       parameters: []
       responses:
         '201':
-          description: post created
+          description: Post created
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/Requests_Posts_Create"
         '422':
-          description: invalid request
+          description: Content Required
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/Shared_BasicError"
       requestBody:
         content:
-          application/json:
+          application/vnd.api+json:
             schema:
               type: object
               properties:
-                title:
-                  type: string
-                content:
-                  type: string
-              required:
-              - title
-              - content
-  "/posts/{id}":
+                data:
+                  type: object
+                  required:
+                  - type
+                  - attributes
+                  - meta
+                  properties:
+                    type:
+                      type: string
+                      example: posts
+                    attributes:
+                      type: object
+                      required:
+                      - title
+                      - content
+                      properties:
+                        title:
+                          type: string
+                          example: Title
+                        content:
+                          type: string
+                          example: Content
+        required: true
+  "/api/v1/posts/{id}":
     get:
       summary: Retrieves a post
       tags:
-      - Blog
       - Posts
       parameters:
       - name: id
@@ -46,36 +81,174 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  title:
-                    type: string
-                  content:
-                    type: string
-                required:
-                - id
-                - title
-                - content
-            application/xml:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  title:
-                    type: string
-                  content:
-                    type: string
-                required:
-                - id
-                - title
-                - content
+                "$ref": "#/components/schemas/Requests_Posts_Show"
         '404':
           description: post not found
 servers:
-- url: https://{defaultHost}
+- url: http://localhost:3000
   variables:
     defaultHost:
-      default: www.example.com
+      default: localhost:3000
+info:
+  title: API V1
+  version: v1
+components:
+  schemas:
+    Models_Post:
+      type: object
+      required:
+      - id
+      - type
+      - attributes
+      properties:
+        id:
+          type: string
+          example: '1'
+        type:
+          type: string
+          example: posts
+        attributes:
+          type: object
+          required:
+          - title
+          - content
+          properties:
+            title:
+              type: string
+              example: Post Title
+            content:
+              type: string
+              example: Post Content
+    Requests_Posts_Create:
+      type: object
+      required:
+      - data
+      - jsonapi
+      properties:
+        data:
+          "$ref": "#/components/schemas/Models_Post"
+        jsonapi:
+          "$ref": "#/components/schemas/Shared_Jsonapi"
+        meta:
+          "$ref": "#/components/schemas/Shared_EmptyMeta"
+    Requests_Posts_Index:
+      type: object
+      required:
+      - data
+      - jsonapi
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Models_Post"
+        jsonapi:
+          "$ref": "#/components/schemas/Shared_Jsonapi"
+        meta:
+          "$ref": "#/components/schemas/Shared_Meta"
+    Requests_Posts_Show:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/components/schemas/Models_Post"
+        jsonapi:
+          "$ref": "#/components/schemas/Shared_Jsonapi"
+        meta:
+          "$ref": "#/components/schemas/Shared_EmptyMeta"
+    Shared_BasicError:
+      anyOf:
+      - type: object
+        required:
+        - errors
+        properties:
+          errors:
+            type: array
+            items:
+              type: object
+              properties:
+                status:
+                  type: integer
+                title:
+                  type: string
+                detail:
+                  type: string
+                source:
+                  type: object
+                  properties:
+                    pointer:
+                      type: string
+                code:
+                  type: string
+      - type: object
+        required:
+        - errors
+        properties:
+          errors:
+            type: array
+            items:
+              type: object
+              properties:
+                status:
+                  type: integer
+                title:
+                  type: string
+                detail:
+                  type: string
+                code:
+                  type: string
+      - type: object
+        required:
+        - errors
+        properties:
+          errors:
+            type: array
+            items:
+              type: object
+              properties:
+                status:
+                  type: integer
+                title:
+                  type: string
+                code:
+                  type: string
+    Shared_EmptyResponse:
+      type: object
+      required:
+      - data
+      - status
+      properties:
+        data:
+          type: object
+        status:
+          type: string
+        jsonapi:
+          "$ref": "#/components/schemas/Shared_Jsonapi"
+    Shared_EmptyMeta:
+      type: object
+      additionalProperties: false
+      properties: {}
+    Shared_Jsonapi:
+      type: object
+      required:
+      - version
+      properties:
+        version:
+          type: string
+          example: '1.0'
+    Shared_Meta:
+      type: object
+      required:
+      - page
+      - per_page
+      - total
+      properties:
+        page:
+          type: integer
+          example: 1
+        per_page:
+          type: integer
+          example: 10
+        total:
+          type: integer
+          example: 20

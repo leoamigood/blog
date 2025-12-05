@@ -1,0 +1,11 @@
+type: object
+required:
+  - data
+  - status
+properties:
+  data:
+    type: object
+  status:
+    type: string
+  jsonapi:
+    $ref: "<%= draw_openapi_ref(:shared, :jsonapi) %>"

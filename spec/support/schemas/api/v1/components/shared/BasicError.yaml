@@ -1,0 +1,55 @@
+anyOf:
+  - type: object
+    required:
+      - errors
+    properties:
+      errors:
+        type: array
+        items:
+          type: object
+          properties:
+            status:
+              type: integer
+            title:
+              type: string
+            detail:
+              type: string
+            source:
+              type: object
+              properties:
+                pointer:
+                  type: string
+            code:
+              type: string
+  - type: object
+    required:
+      - errors
+    properties:
+      errors:
+        type: array
+        items:
+          type: object
+          properties:
+            status:
+              type: integer
+            title:
+              type: string
+            detail:
+              type: string
+            code:
+              type: string
+  - type: object
+    required:
+      - errors
+    properties:
+      errors:
+        type: array
+        items:
+          type: object
+          properties:
+            status:
+              type: integer
+            title:
+              type: string
+            code:
+              type: string

@@ -14,4 +14,10 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  scope module: :api, path: :api, defaults: { format: :json } do
+    scope module: :v1, path: :v1 do
+      resources :posts, only: %i[index create show]
+    end
+  end
 end

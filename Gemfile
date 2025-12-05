@@ -53,8 +53,16 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
+  gem "kaminari"
   gem "rspec-rails", "~> 8.0.0"
   gem "rswag-specs"
+  gem "jsonapi-rails"
+
+  gem "rubocop", "~> 1.75", require: false
+  gem "rubocop-performance", "~> 1.21", require: false
+  gem "rubocop-factory_bot", "~> 2.26", require: false
+  gem "rubocop-rails", "~> 2.34", require: false
+  gem "rubocop-rspec_rails", require: false
 end
 
 group :development do
@@ -66,4 +74,6 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+
+  gem "jsonapi-rspec", "~> 0.0.11"
 end

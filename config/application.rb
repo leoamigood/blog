@@ -1,5 +1,6 @@
 require_relative "boot"
 
+require_relative "../lib/middleware/json_api_errors"
 require "rails/all"
 
 # Require the gems listed in Gemfile, including any gems

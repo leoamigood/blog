@@ -1,0 +1,24 @@
+type: object
+required:
+  - id
+  - type
+  - attributes
+properties:
+  id:
+    type: string
+    example: "1"
+  type:
+    type: string
+    example: 'posts'
+  attributes:
+    type: object
+    required:
+      - title
+      - content
+    properties:
+      title:
+        type: string
+        example: 'Post Title'
+      content:
+        type: string
+        example: 'Post Content'

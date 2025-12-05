@@ -1,0 +1,13 @@
+type: object
+required:
+  - data
+  - jsonapi
+properties:
+  data:
+    type: array
+    items:
+      $ref: "<%= draw_openapi_ref(:models, :Post) %>"
+  jsonapi:
+    $ref: "<%= draw_openapi_ref(:shared, :jsonapi) %>"
+  meta:
+    $ref: "<%= draw_openapi_ref(:shared, :meta) %>"
