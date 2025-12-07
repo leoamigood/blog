@@ -1,0 +1,25 @@
+type: object
+required:
+  - id
+  - type
+  - attributes
+properties:
+  id:
+    type: string
+    example: "1"
+  type:
+    type: string
+    example: 'comments'
+  attributes:
+    type: object
+    required:
+      - content
+    properties:
+      content:
+        type: string
+        example: 'Comment Content'
+  relationships:
+    type: object
+    properties:
+      post:
+        $ref: "<%= draw_openapi_ref(:models, 'OptionalObject') %>"

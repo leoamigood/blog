@@ -5,6 +5,83 @@ consumes:
 produces:
 - application/vnd.api+json
 paths:
+  "/api/v1/posts/{post_id}/comments":
+    get:
+      summary: List comments
+      tags:
+      - Comments
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          type: string
+          required: false
+          description: Starts from 1
+      - name: per_page
+        in: query
+        schema:
+          type: string
+          required: false
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Requests_Comments_Index"
+    post:
+      summary: Creates a comment
+      tags:
+      - Comments
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Comment created
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/Requests_Comments_Create"
+        '404':
+          description: Post not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/Shared_BasicError"
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  required:
+                  - type
+                  - attributes
+                  - meta
+                  properties:
+                    type:
+                      type: string
+                      example: comments
+                    attributes:
+                      type: object
+                      required:
+                      - content
+                      properties:
+                        content:
+                          type: string
+                          example: Comment Content
+        required: true
   "/api/v1/posts":
     get:
       summary: List posts
@@ -71,17 +148,17 @@ paths:
                       properties:
                         title:
                           type: string
-                          example: Title
+                          example: Post Title
                         content:
                           type: string
-                          example: Content
+                          example: Post Content
                         published:
                           type: boolean
                           example: true
         required: true
   "/api/v1/posts/{id}":
     get:
-      summary: Retrieves a post
+      summary: Retrieves a post with comments
       tags:
       - Posts
       parameters:
@@ -109,6 +186,78 @@ info:
   version: v1
 components:
   schemas:
+    Models_Comment:
+      type: object
+      required:
+      - id
+      - type
+      - attributes
+      properties:
+        id:
+          type: string
+          example: '1'
+        type:
+          type: string
+          example: comments
+        attributes:
+          type: object
+          required:
+          - content
+          properties:
+            content:
+              type: string
+              example: Comment Content
+        relationships:
+          type: object
+          properties:
+            post:
+              "$ref": "#/components/schemas/Models_OptionalObject"
+    Models_OptionalCollection:
+      anyOf:
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              type: object
+              required:
+              - id
+              - type
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                type:
+                  type: string
+      - type: object
+        properties:
+          meta:
+            type: object
+            properties:
+              included:
+                type: boolean
+                example: false
+    Models_OptionalObject:
+      anyOf:
+      - type: object
+        properties:
+          data:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              type:
+                type: string
+            nullable: true
+      - type: object
+        properties:
+          meta:
+            type: object
+            properties:
+              included:
+                type: boolean
+                example: false
     Models_Post:
       type: object
       required:
@@ -138,6 +287,48 @@ components:
             published:
               type: boolean
               example: true
+        relationships:
+          type: object
+          properties:
+            comments:
+              "$ref": "#/components/schemas/Models_OptionalCollection"
+    Requests_Comments_Create:
+      type: object
+      required:
+      - data
+      - jsonapi
+      properties:
+        data:
+          "$ref": "#/components/schemas/Models_Comment"
+        jsonapi:
+          "$ref": "#/components/schemas/Shared_Jsonapi"
+        meta:
+          "$ref": "#/components/schemas/Shared_EmptyMeta"
+    Requests_Comments_Index:
+      type: object
+      required:
+      - data
+      - jsonapi
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Models_Comment"
+        jsonapi:
+          "$ref": "#/components/schemas/Shared_Jsonapi"
+        meta:
+          "$ref": "#/components/schemas/Shared_Meta"
+    Requests_Comments_Show:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/components/schemas/Models_Comment"
+        jsonapi:
+          "$ref": "#/components/schemas/Shared_Jsonapi"
+        meta:
+          "$ref": "#/components/schemas/Shared_EmptyMeta"
     Requests_Posts_Create:
       type: object
       required:

@@ -32,8 +32,8 @@ describe 'Blog API', type: :request do
                 type: :object,
                 required: %w[title content],
                 properties: {
-                  title: { type: :string, example: 'Title' },
-                  content: { type: :string, example: 'Content' },
+                  title: { type: :string, example: 'Post Title' },
+                  content: { type: :string, example: 'Post Content' },
                   published: { type: :boolean, example: true }
                 }
               }
@@ -47,8 +47,8 @@ describe 'Blog API', type: :request do
           data: {
             type: 'posts',
             attributes: {
-              title: 'Title',
-              content: 'content'
+              title: 'Post Title',
+              content: 'Post Content'
             }
           }
         }
@@ -79,12 +79,12 @@ describe 'Blog API', type: :request do
   end
 
   path '/api/v1/posts/{id}' do
-    get 'Retrieves a post' do
+    get 'Retrieves a post with comments' do
       tags 'Posts'
       produces 'application/json'
       parameter name: 'id', in: :path, type: :string
 
-      let(:post) { Post.create(title: 'foo', content: 'bar', published: true) }
+      let(:post) { Post.create(title: 'Post Title', content: 'Post Content', published: true) }
 
       response '200', 'post found' do
         schema '$ref' => draw_openapi_ref(:requests, :posts, :show)

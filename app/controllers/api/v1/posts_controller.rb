@@ -15,6 +15,12 @@ module Api
 
       private
 
+      def serializer_options
+        {
+          include: [ :comments ]
+        }
+      end
+
       def create_params
         params.expect(resource: %i[title content])
       end

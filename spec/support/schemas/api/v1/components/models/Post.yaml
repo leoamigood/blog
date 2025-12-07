@@ -26,3 +26,8 @@ properties:
       published:
         type: boolean
         example: true
+  relationships:
+    type: object
+    properties:
+      comments:
+        $ref: "<%= draw_openapi_ref(:models, 'OptionalCollection') %>"
