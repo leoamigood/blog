@@ -1,0 +1,20 @@
+anyOf:
+  - type: object
+    properties:
+      data:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+          type:
+            type: string
+        nullable: true
+  - type: object
+    properties:
+      meta:
+        type: object
+        properties:
+          included:
+            type: boolean
+            example: false

@@ -9,25 +9,17 @@ properties:
     example: "1"
   type:
     type: string
-    example: 'posts'
+    example: 'comments'
   attributes:
     type: object
     required:
-      - title
       - content
-      - published
     properties:
-      title:
-        type: string
-        example: 'Post Title'
       content:
         type: string
-        example: 'Post Content'
-      published:
-        type: boolean
-        example: true
+        example: 'Comment Content'
   relationships:
     type: object
     properties:
-      comments:
+      post:
         $ref: "<%= draw_openapi_ref(:models, 'OptionalObject') %>"

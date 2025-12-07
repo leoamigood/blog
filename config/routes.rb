@@ -17,7 +17,9 @@ Rails.application.routes.draw do
 
   scope module: :api, path: :api, defaults: { format: :json } do
     scope module: :v1, path: :v1 do
-      resources :posts, only: %i[index create show]
+      resources :posts, only: %i[index create show] do
+        resources :comments, only: %i[index create]
+      end
     end
   end
 end
