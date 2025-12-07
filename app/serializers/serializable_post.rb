@@ -3,5 +3,5 @@
 class SerializablePost < BaseSerializable
   type "posts"
 
-  attributes :title, :content
+  attributes :title, :content, :published
 end

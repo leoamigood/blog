@@ -15,6 +15,7 @@ properties:
     required:
       - title
       - content
+      - published
     properties:
       title:
         type: string
@@ -22,3 +23,6 @@ properties:
       content:
         type: string
         example: 'Post Content'
+      published:
+        type: boolean
+        example: true

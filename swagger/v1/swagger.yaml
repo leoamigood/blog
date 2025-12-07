@@ -10,6 +10,18 @@ paths:
       summary: List posts
       tags:
       - Posts
+      parameters:
+      - name: page
+        in: query
+        schema:
+          type: string
+          required: false
+          description: Starts from 1
+      - name: per_page
+        in: query
+        schema:
+          type: string
+          required: false
       responses:
         '200':
           description: successful
@@ -63,6 +75,9 @@ paths:
                         content:
                           type: string
                           example: Content
+                        published:
+                          type: boolean
+                          example: true
         required: true
   "/api/v1/posts/{id}":
     get:
@@ -112,6 +127,7 @@ components:
           required:
           - title
           - content
+          - published
           properties:
             title:
               type: string
@@ -119,6 +135,9 @@ components:
             content:
               type: string
               example: Post Content
+            published:
+              type: boolean
+              example: true
     Requests_Posts_Create:
       type: object
       required:

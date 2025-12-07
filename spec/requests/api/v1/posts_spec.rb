@@ -5,6 +5,11 @@ describe 'Blog API', type: :request do
     get 'List posts' do
       tags 'Posts'
       consumes 'application/json'
+      parameter name: :page, in: :query, schema: { type: :string, required: false, description: 'Starts from 1' }
+      parameter name: :per_page, in: :query, schema: { type: :string, required: false }
+
+      let(:page) { 1 }
+      let(:per_page) { 20 }
 
       response '200', 'successful' do
         schema '$ref' => draw_openapi_ref(:requests, :posts, :index)
@@ -28,7 +33,8 @@ describe 'Blog API', type: :request do
                 required: %w[title content],
                 properties: {
                   title: { type: :string, example: 'Title' },
-                  content: { type: :string, example: 'Content' }
+                  content: { type: :string, example: 'Content' },
+                  published: { type: :boolean, example: true }
                 }
               }
             }
@@ -77,9 +83,8 @@ describe 'Blog API', type: :request do
       tags 'Posts'
       produces 'application/json'
       parameter name: 'id', in: :path, type: :string
-      # request_body_example value: { some_field: 'Foo' }, name: 'basic', summary: 'Request example description'
 
-      let(:post) { Post.create(title: 'foo', content: 'bar') }
+      let(:post) { Post.create(title: 'foo', content: 'bar', published: true) }
 
       response '200', 'post found' do
         schema '$ref' => draw_openapi_ref(:requests, :posts, :show)
